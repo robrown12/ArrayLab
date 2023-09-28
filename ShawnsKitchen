@@ -1,0 +1,98 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+class MenuItem {
+	    private String name;
+	    private double price;
+
+	    public MenuItem(String name, double price) {
+	        this.name = name;
+	        this.price = price;
+	    }
+
+	    public String getName() {
+	        return name;
+	    }
+
+	    public double getPrice() {
+	        return price;
+	    }
+	}
+
+	public class Restaurant {
+	    private static List<MenuItem> menu = new ArrayList<>();
+	    private static Map<String, Integer> orders = new HashMap<>();
+	    private static double totalMoneyMade = 0;
+
+	    public static void main(String[] args) {
+	        // Create the menu
+	        createMenu();
+
+	        // 20 orders from customers
+	        for (int i = 1; i <= 20; i++) {
+	            System.out.println("Order " + i + " - Shawn's Kitchen!");
+	            displayMenu();
+	            String selectedItem = menu.get((int) (Math.random() * menu.size())).getName();
+	            processOrder(selectedItem);
+	            System.out.println("You ordered: " + selectedItem);
+	            System.out.println();
+	        }
+
+	        // Display summary
+	        displaySummary();
+	    }
+
+	    private static void createMenu() {
+	        // Appetizers
+	        menu.add(new MenuItem("Crab Cake", 7.99));
+	        menu.add(new MenuItem("Wings", 8.99));
+	        menu.add(new MenuItem("Spinach Dip", 6.99));
+	        menu.add(new MenuItem("Salad", 9.99));
+	        menu.add(new MenuItem("Fries", 5.99));
+
+	        // Entrees
+	        menu.add(new MenuItem("Pizza", 12.99));
+	        menu.add(new MenuItem("Shrimp Pasta", 14.99));
+	        menu.add(new MenuItem("Cheese Burger", 11.99));
+	        menu.add(new MenuItem("Chicken Sandwich", 12.99));
+	        menu.add(new MenuItem("Chicken Wrap", 13.99));
+
+	        // Desserts
+	        menu.add(new MenuItem("Chocolate Cake", 5.99));
+	        menu.add(new MenuItem("Apple Pie", 6.99));
+	        menu.add(new MenuItem("Strawberry Shortcake", 4.99));
+	        menu.add(new MenuItem("Danish", 7.99));
+	        menu.add(new MenuItem("Cinamon Roll", 8.99));
+	    }
+
+	    private static void displayMenu() {
+	        System.out.println("Menu:");
+	        for (int i = 0; i < menu.size(); i++) {
+	            System.out.println((i + 1) + ". " + menu.get(i).getName() + " - $" + menu.get(i).getPrice());
+	        }
+	    }
+
+	    private static void processOrder(String itemName) {
+	        totalMoneyMade += menu.stream()
+	                .filter(item -> item.getName().equals(itemName))
+	                .findFirst()
+	                .map(MenuItem::getPrice)
+	                .orElse(0.0);
+
+	        orders.put(itemName, orders.getOrDefault(itemName, 0) + 1);
+	    }
+
+	    private static void displaySummary() {
+	        System.out.println("Summary:");
+	        System.out.println("Total money made: $" + totalMoneyMade);
+
+	        for (Map.Entry<String, Integer> entry : orders.entrySet()) {
+	            String itemName = entry.getKey();
+	            int itemCount = entry.getValue();
+	            double itemPercentage = (itemCount / 20.0) * 100;
+	            System.out.println(itemName + ": " + itemCount + " orders (" + itemPercentage + "%)");
+	        }
+	    }
+	}
